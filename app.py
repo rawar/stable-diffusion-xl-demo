@@ -20,9 +20,11 @@ if model_dir:
     # Use local model
     model_key_base = os.path.join(model_dir, "stable-diffusion-xl-base-1.0")
     model_key_refiner = os.path.join(model_dir, "stable-diffusion-xl-refiner-1.0")
+    lora_model = os.path.join(model_dir, "heman-toy-lora-trained-sdxl")
 else:
     model_key_base = "stabilityai/stable-diffusion-xl-base-1.0"
     model_key_refiner = "stabilityai/stable-diffusion-xl-refiner-1.0"
+    lora_model = "Rawar/heman-toy-lora-trained-sdxl"
 
 # Process environment variables
 
@@ -44,6 +46,7 @@ share = os.getenv("SHARE", "false").lower() == "true"
 
 print("Loading model", model_key_base)
 pipe = DiffusionPipeline.from_pretrained(model_key_base, torch_dtype=torch.float16, use_safetensors=True, variant="fp16")
+pipe.load_lora_weights(lora_model)
 
 multi_gpu = os.getenv("MULTI_GPU", "false").lower() == "true"
 
